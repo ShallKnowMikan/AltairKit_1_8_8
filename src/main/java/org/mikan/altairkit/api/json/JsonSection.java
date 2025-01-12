@@ -136,4 +136,27 @@ public abstract class JsonSection {
     public abstract boolean isEmpty();
     public abstract JsonSection getSection(String field);
 
+    public File getDataFolder() {
+        return dataFolder;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public JsonObject getSectionRoot() {
+        return sectionRoot;
+    }
+
+    public JsonObject getRoot() {
+        return root;
+    }
+
+    public JsonParser getParser() {
+        return parser;
+    }
+
+    public Gson getGson() {
+        return gson;
+    }
 }

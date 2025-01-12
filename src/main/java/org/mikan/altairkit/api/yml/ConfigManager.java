@@ -116,9 +116,11 @@ public class ConfigManager {
     }
 
     private String getDirsName(String path){
-        List<String> substrings = new ArrayList<>(List.of(path.split("/")));
+        List<String> substrings = new ArrayList<>(Arrays.asList(path.split("/")));
         StringBuilder builder = new StringBuilder();
-        substrings.removeLast();
+        if (!substrings.isEmpty()) {
+            substrings.remove(substrings.size() - 1); // Remove last
+        }
         for (String dir : substrings) {
             builder.append(dir).append("/");
         }

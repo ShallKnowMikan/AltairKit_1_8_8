@@ -1,6 +1,7 @@
 package org.mikan.altairkit.api.gui;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -46,8 +47,9 @@ public abstract class AltairGUI {
 
 
     public void show(Player player){
-        player.openInventory(this.gui);
         Data.addToMap(player,title);
+        player.openInventory(this.gui);
+
     }
 
 

@@ -6,20 +6,25 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public abstract class AltairCommand extends BukkitCommand {
 
+    public static final Set<AltairCommand> commands = new HashSet<>();
+
     public final List<AltairCommand> SUBCOMMANDS = new ArrayList<>();
 
-    protected AltairCommand(String name) {
+    public AltairCommand(String name) {
         super(name);
+        commands.add(this);
     }
 
     @Override
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
 
-        if (!SUBCOMMANDS.isEmpty()) {
+        if (!SUBCOMMANDS.isEmpty() && strings.length > 0) {
             processSubcommands(commandSender,strings);
             return true;
         }
@@ -31,8 +36,8 @@ public abstract class AltairCommand extends BukkitCommand {
 
     }
 
-    protected abstract void onPlayerPerforms(Player player, String[] args);
-    protected abstract void onConsolePerforms(ConsoleCommandSender consoleCommandSender, String[] args);
+    public abstract void onPlayerPerforms(Player player, String[] args);
+    public abstract void onConsolePerforms(ConsoleCommandSender consoleCommandSender, String[] args);
 
     public void addSubCommand(AltairCommand command){
         SUBCOMMANDS.add(command);
@@ -42,8 +47,8 @@ public abstract class AltairCommand extends BukkitCommand {
         this.getAliases().add(alias);
     }
 
-    public static String[] skipFirstArrayElement(String[] array) {
-        if (array == null || array.length <= 1) {
+    private static String[] skipFirstArrayElement(String[] array) {
+        if (array == null || array.length == 0 || array.length <= 1) {
             return new String[0];
         }
 
@@ -67,6 +72,10 @@ public abstract class AltairCommand extends BukkitCommand {
                 }
             }
         });
+    }
+
+    public static Set<AltairCommand> getCommands(){
+        return commands;
     }
 
 }
