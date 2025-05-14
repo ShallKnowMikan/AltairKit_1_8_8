@@ -22,7 +22,7 @@ public abstract class Module {
     protected boolean loaded = false;
     private final ChatColor color;
 
-    private final String PL_NAME = "MikanWeapons";
+    private final String PL_NAME;
 
     public Module(Plugin plugin, String name) {
         if (name.isEmpty()) {
@@ -30,6 +30,7 @@ public abstract class Module {
         }
 
         this.plugin = plugin;
+        this.PL_NAME = plugin.getName();
         this.name = name;
         this.color = ChatColor.WHITE;
         this.logger = plugin.getLogger();
@@ -42,6 +43,7 @@ public abstract class Module {
         }
 
         this.plugin = plugin;
+        this.PL_NAME = plugin.getName();
         this.name = name;
         this.color = color;
         this.logger = plugin.getLogger();
