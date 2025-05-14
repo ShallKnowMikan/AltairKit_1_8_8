@@ -2,10 +2,14 @@ package org.mikan.altairkit.utils;
 
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 public class NmsUtils {
 
@@ -82,6 +86,63 @@ public class NmsUtils {
         }
     }
 
+    public static void sendParticles(Chunk[] chunks,float x , float y , float z, EnumParticle particle, float speed, int count) {
+
+        try {
+
+            float offsetX = 0;
+            float offsetY = 0;
+            float offsetZ = 0;
+
+
+            PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(
+                    particle,
+                    true,
+                    x, y, z,
+                    offsetX, offsetY, offsetZ,
+                    speed,
+                    count
+            );
+
+            for (Chunk chunk : chunks) {
+                for (Entity entity : chunk.getEntities()) {
+                    if (!(entity instanceof Player)) continue;
+
+                    Player player = (Player) entity;
+                    ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+                }
+            }
+
+        } catch (Exception ignored) {
+
+        }
+    }
+
+    public static void sendParticles(float x , float y , float z, EnumParticle particle, float speed, int count,Set<Player> players) {
+
+        try {
+
+            float offsetX = 0;
+            float offsetY = 0;
+            float offsetZ = 0;
+
+
+            PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(
+                    particle,
+                    true,
+                    x, y, z,
+                    offsetX, offsetY, offsetZ,
+                    speed,
+                    count
+            );
+
+            players.forEach(player -> ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet));
+
+        } catch (Exception ignored) {
+
+        }
+    }
+
 
     public static void sendColorizedParticles(Location location, Color color, float speed, int count) {
 
@@ -131,6 +192,58 @@ public class NmsUtils {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
             }
+        } catch (Exception ignored) {
+
+        }
+    }
+
+    public static void sendColorizedParticles(float x, float y, float z, Color color, float speed, Chunk[] chunks) {
+
+        try {
+
+            float r = color.getRed() / 255.0f;
+            float g = color.getGreen() / 255.0f;
+            float b = color.getBlue() / 255.0f;
+
+            // r can't be 0
+            if (r == 0) {
+                r = Float.MIN_VALUE;
+            }
+
+            PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(
+                    EnumParticle.REDSTONE, true, x, y, z, r, g, b, speed, 0);
+
+            for (Chunk chunk : chunks) {
+                for (Entity entity : chunk.getEntities()) {
+                    if (!(entity instanceof Player)) continue;
+
+                    Player player = (Player) entity;
+                    ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+                }
+            }
+        } catch (Exception ignored) {
+
+        }
+    }
+
+    public static void sendColorizedParticles(float x, float y, float z, Color color, float speed, Set<Player> players) {
+
+        try {
+
+            float r = color.getRed() / 255.0f;
+            float g = color.getGreen() / 255.0f;
+            float b = color.getBlue() / 255.0f;
+
+            // r can't be 0
+            if (r == 0) {
+                r = Float.MIN_VALUE;
+            }
+
+            PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(
+                    EnumParticle.REDSTONE, true, x, y, z, r, g, b, speed, 0);
+
+            players.forEach(player ->
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet));
         } catch (Exception ignored) {
 
         }

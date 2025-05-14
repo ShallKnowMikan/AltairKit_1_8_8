@@ -18,6 +18,8 @@ public class InventoryClickEventListener implements Listener {
 
         if (!Data.GUIMap.containsKey(player)) return;
 
+        if (e.getClickedInventory() == null) return;
+
         String title = e.getClickedInventory().getTitle();
 
         if (title.equals(Data.GUIMap.get(player)))

@@ -14,7 +14,8 @@ public abstract class AltairCommand extends BukkitCommand {
 
     public static final Set<AltairCommand> commands = new HashSet<>();
 
-    public final List<AltairCommand> SUBCOMMANDS = new ArrayList<>();
+    public final List<AltairCommand> subcommands = new ArrayList<>();
+    public final List<String> subcommandNames = new ArrayList<>();
 
     public AltairCommand(String name) {
         super(name);
@@ -24,10 +25,11 @@ public abstract class AltairCommand extends BukkitCommand {
     @Override
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
 
-        if (!SUBCOMMANDS.isEmpty() && strings.length > 0) {
+        if (!subcommands.isEmpty() && strings.length > 0) {
             processSubcommands(commandSender,strings);
             return true;
         }
+        this.onPerforms(commandSender,strings);
         if (commandSender instanceof Player)
             this.onPlayerPerforms((Player) commandSender,strings);
         else if (commandSender instanceof ConsoleCommandSender)
@@ -38,9 +40,11 @@ public abstract class AltairCommand extends BukkitCommand {
 
     public abstract void onPlayerPerforms(Player player, String[] args);
     public abstract void onConsolePerforms(ConsoleCommandSender consoleCommandSender, String[] args);
+    public abstract void onPerforms(CommandSender sender, String[] args);
 
     public void addSubCommand(AltairCommand command){
-        SUBCOMMANDS.add(command);
+        subcommands.add(command);
+        subcommandNames.add(command.getName());
     }
 
     public void addAlias(String alias){
@@ -59,7 +63,7 @@ public abstract class AltairCommand extends BukkitCommand {
 
     private void processSubcommands(CommandSender sender,String[] args){
 
-        this.SUBCOMMANDS.forEach(command -> {
+        this.subcommands.forEach(command -> {
 
             if (command.getName().equalsIgnoreCase(args[0]) || command.getAliases().contains(args[0])) {
                 String[] updatedArgs = skipFirstArrayElement(args);
@@ -78,4 +82,16 @@ public abstract class AltairCommand extends BukkitCommand {
         return commands;
     }
 
+    public List<AltairCommand> getSubcommands() {
+        return subcommands;
+    }
+
+    public List<String> getSubcommandNames() {
+        return subcommandNames;
+    }
+
+    @Override
+    public String toString(){
+        return this.getName();
+    }
 }
